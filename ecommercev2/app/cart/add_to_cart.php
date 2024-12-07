@@ -5,7 +5,7 @@ if (!isset($_SESSION)) {
 }
 
 require_once(__DIR__."/../config/Directories.php"); 
-include("..\config\DatabaseConnect.php");
+include("../config/DatabaseConnect.php");
 
 if (!isset($_SESSION["user_id"])) {
     header("location: ".BASE_URL."login.php");
