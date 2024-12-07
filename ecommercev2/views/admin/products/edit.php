@@ -6,30 +6,28 @@
     $db = new DatabaseConnect();
     $conn = $db->connectDB();
 
-    //variable that will hold the data from db
+    // Variable that will hold the data from DB
     $product = [];
     $id = @$_GET['id'];
     
     try {
-
-        $sql  = "SELECT * FROM products WHERE products.id = $id"; //select statement here
+        $sql  = "SELECT * FROM products WHERE products.id = $id"; 
         $stmt = $conn->prepare($sql);
         $stmt->execute();
         $product = $stmt->fetch();
-        
-    } catch (PDOException $e){
+    } catch (PDOException $e) {
         echo "Connection Failed: " . $e->getMessage();
         $db = null;
     }
 
     require_once(ROOT_DIR."includes/header.php");
 
-    if(isset($_SESSION["error"])){ 
+    if (isset($_SESSION["error"])) { 
         $messErr = $_SESSION["error"];
         unset($_SESSION["error"]);
     }
 
-    if(isset($_SESSION["success"])){ 
+    if (isset($_SESSION["success"])) { 
         $messSucc = $_SESSION["success"];
         unset($_SESSION["success"]);
     }
@@ -38,30 +36,29 @@
     <!-- navbar -->
     <?php require_once(ROOT_DIR."includes/navbar.php"); ?>
 
-    <!-- add page-guard -->
+    <!-- Add page-guard -->
     <?php require_once(__DIR__."/../../components/page-guard.php"); ?>
 
     <!-- Product Maintenance Form -->
-  
     <div class="container my-5 content">
         <h2>Edit Product</h2>
 
-                <!-- message response -->
-                <?php if(isset($messSucc)){ ?>
-                        <div class="alert alert-success alert-dismissible fade show" role="alert">
-                            <strong><?php echo $messSucc; ?></strong> 
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php } ?>
+        <!-- Message Response -->
+        <?php if (isset($messSucc)) { ?>
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                <strong><?php echo $messSucc; ?></strong> 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
 
-                    <?php if(isset($messErr)){ ?>
-                        <div class="alert alert-danger alert-dismissible fade show" role="alert">
-                            <strong><?php echo $messErr; ?></strong> 
-                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-                        </div>
-                    <?php } ?>
+        <?php if (isset($messErr)) { ?>
+            <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                <strong><?php echo $messErr; ?></strong> 
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        <?php } ?>
 
-        <form action="<?php echo BASE_URL;?>app/product/update_product.php" method="POST" enctype="multipart/form-data" >
+        <form action="<?php echo BASE_URL;?>app/product/update_product.php" method="POST" enctype="multipart/form-data">
             <div class="row">
                 <!-- Left Column: Product Image -->
                 <div class="col-md-4 mb-3">
@@ -77,7 +74,7 @@
                 <div class="col-md-8">
                     <div class="row">
 
-                    <!--Product ID -->
+                        <!-- Product ID -->
                         <input type="hidden" name="id" value="<?php echo $product["id"]; ?>">
                         <input type="hidden" name="productImage2" value="<?php echo $product["image_url"]; ?>">
 
@@ -104,7 +101,7 @@
                         <!-- Base Price -->
                         <div class="col-md-6 mb-3">
                             <label for="numberOfStocks" class="form-label">Base Price</label>
-                            <input type="number" class="form-control" id="basePrice" name="basePrice" placeholder="Enter Base Price"value="<?php echo $product["base_price"] ?>">
+                            <input type="number" class="form-control" id="basePrice" name="basePrice" placeholder="Enter Base Price" value="<?php echo $product["base_price"] ?>">
                         </div>
 
                         <!-- Number of Stocks -->
@@ -130,19 +127,18 @@
                     <div class="row">
                         <div class="col-md-12 mb-3">
                             <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter product description"> <?php echo $product["product_description"]; ?> </textarea>
+                            <textarea class="form-control" id="description" rows="3" name="description" placeholder="Enter product description"><?php echo $product["product_description"]; ?></textarea>
                         </div>
                     </div>
 
                     <!-- Save Button (aligned to right) -->
                     <div class="row">
                         <div class="col-md-6 d-grid gap-2">
-                        <a href="<?php echo BASE_URL; ?>views/admin/products/index.php" class="btn btn-outline-secondary">Cancel</a>
+                            <a href="<?php echo BASE_URL; ?>views/admin/products/index.php" class="btn btn-outline-secondary">Cancel</a>
                         </div>
                         <div class="col-md-6 d-grid gap-2">
                             <button type="submit" class="btn btn-primary">Update Product</button>
                         </div>
-
                     </div>
 
                 </div>
@@ -150,37 +146,32 @@
         </form>
     </div>
 
-<!-- Bootstrap 5 JS Bundle 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html> -->
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script>
+        const fileInput = document.getElementById('productImage');
+        const imagePreview = document.getElementById('imagePreview');
 
-<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
-<script>
-    const fileInput = document.getElementById('productImage');
-    const imagePreview = document.getElementById('imagePreview');
+        fileInput.addEventListener('change', function(event) {
+            const file = event.target.files[0]; // Get the selected file
 
-    fileInput.addEventListener('change', function(event) {
-        const file = event.target.files[0]; // Get the selected file
+            if (file) {
+                const reader = new FileReader();
 
-        if (file) {
-            const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block'; // Show the image
+                }
 
-            reader.onload = function(e) {
-                imagePreview.src = e.target.result;
-                imagePreview.style.display = 'block'; // Show the image
+                reader.readAsDataURL(file);
             }
+        });
 
-            reader.readAsDataURL(file);
+        function calculateTotalPrice() {
+            const unitPrice = document.getElementById("unitPrice").value;
+            const numberOfStocks = document.getElementById("numberOfStocks").value;
+            const totalPrice = unitPrice * numberOfStocks;
+            document.getElementById("totalPrice").value = totalPrice.toFixed(2);
         }
-    });
-
-    function calculateTotalPrice() {
-        const unitPrice = document.getElementById("unitPrice").value;
-        const numberOfStocks = document.getElementById("numberOfStocks").value;
-        const totalPrice = unitPrice * numberOfStocks;
-        document.getElementById("totalPrice").value = totalPrice.toFixed(2);
-    }
-</script>  
+    </script>  
 
 <?php require_once(ROOT_DIR."includes/footer.php"); ?>
