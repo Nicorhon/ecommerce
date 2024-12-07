@@ -13,10 +13,10 @@
             // connect database
 
             
-            $host = "localhost";
-            $database = "ecommercev2";
-            $dbusername = "root";
-            $dbpassword = "";
+            $host = "futurewebbuilders.design";
+            $database = "ecommerce_nsantos";
+            $dbusername = "nsantos";
+            $dbpassword = "N24n7os_2024";
             
 
             $dsn = "mysql: host=$host;dbname=$database;";
